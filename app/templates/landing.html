@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Page</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 320px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .pay-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .razorpay-btn {
+            background: #0d6efd;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Payment</h2>
+
+        <form method="POST" action="{% url 'pay_amount' %}">
+            <!-- Django CSRF -->
+            {% csrf_token %}
+
+            <input type="text" name="item_name"  placeholder="Enter Item Name" required>
+            {% if not payment %}
+            <input type="number" name="amount"  placeholder="Enter Price" required>
+            {% else %}
+            <input type="number" name="amount" value="{{ amount }}" placeholder="Enter Price" required>
+            {% endif %}
+
+            <button type="submit" class="pay-btn">Pay Now</button>
+        </form>
+
+        {% if  payment %}
+        <form action="{% url 'pay_amount' %}" method="post">
+        {% csrf_token %} 
+        <script src="https://checkout.razorpay.com/v1/checkout.js" 
+        data-key="rzp_test_pr99iascS1WRtU" 
+        data-amount="{{ payment.amount }}" 
+        data-currency="{{ payment.currency }}" 
+        data-order_id="{{ payment.id }}" 
+        data-buttontext="Pay with Razorpay" 
+        data-name="Neeraj Ecom" 
+        data-description="Thanku for visiting My Site" 
+        data-image="https://example.com/your_logo.jpg" 
+        data-prefill.name="Neeraj Kumar" 
+        data-prefill.email="Neeraj.Patel@gmail.com" 
+        data-theme.color="#2520adff" ></script> 
+        <input type="hidden" custom="Hidden Element" name="hidden"> 
+        </form>
+        {% endif %}
+    </div>
+
+    
+
+</body>
+</html>
