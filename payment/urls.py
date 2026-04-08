@@ -21,5 +21,6 @@ from app.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path ('',landing,name='landing'),
-    path('pay_amount/',pay_amount,name='pay_amount')
+    path('pay_amount/',pay_amount,name='pay_amount'),
+    path('order_status/',order_status,name='order_status')
 ]

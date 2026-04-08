@@ -12,7 +12,10 @@ def pay_amount(req):
         print(type(price))
         amount = float(price)*100
         client = razorpay.Client(auth =("rzp_test_pr99iascS1WRtU" , "UTDIzPGwICnAssu3Q3lk7zUi"))
-        data = { "amount": amount, "currency": "INR", "receipt": "order_rcptid_11" }
+        data = { "amount": amount, 
+                "currency": "INR", 
+                "receipt": "order_rcptid_11" 
+                }
         payment = client.order.create(data=data)
         print(payment)
         Order.objects.create(
@@ -20,3 +23,16 @@ def pay_amount(req):
             Amount= int(price),
         )
     return render(req,'landing.html',{'payment':payment,'amount':price})
+
+
+def order_status(req):
+    print(req.POST)
+    rpi = req.POST.get('razorpay_payment_id')
+    roi = req.POST.get('razorpay_order_id')
+    print(rpi)
+    print(roi)
+    old_roi = Order.objects.get(Order_id=roi)
+    old_roi.Razorpay_Id = rpi
+    old_roi.Status = True
+    old_roi.save()
+    return render(req,'success.html')

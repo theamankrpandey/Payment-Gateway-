@@ -80,7 +80,7 @@
         </form>
 
         {% if  payment %}
-        <form action="{% url 'pay_amount' %}" method="post">
+        <form action="{% url 'order_status' %}" method="post">
         {% csrf_token %} 
         <script src="https://checkout.razorpay.com/v1/checkout.js" 
         data-key="rzp_test_pr99iascS1WRtU" 
