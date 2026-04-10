@@ -9,20 +9,24 @@ def landing(req):
 def pay_amount(req):
     if req.method=='POST':
         price = req.POST.get('amount')
+        item_name = req.POST.get('item_name')
         print(type(price))
         amount = float(price)*100
-        client = razorpay.Client(auth =("rzp_test_pr99iascS1WRtU" , "UTDIzPGwICnAssu3Q3lk7zUi"))
         data = { "amount": amount, 
                 "currency": "INR", 
-                "receipt": "order_rcptid_11" 
+                "receipt": "order_rcptid_11",
+                "notes":{
+                    "item_name":item_name,
+                } 
                 }
+        client = razorpay.Client(auth =("rzp_test_pr99iascS1WRtU" , "UTDIzPGwICnAssu3Q3lk7zUi"))
         payment = client.order.create(data=data)
         print(payment)
         Order.objects.create(
             Order_id = payment.get('id'),
             Amount= int(price),
         )
-    return render(req,'landing.html',{'payment':payment,'amount':price})
+    return render(req,'landing.html',{'payment':payment,'amount':price,'item_name': item_name})
 
 
 def order_status(req):

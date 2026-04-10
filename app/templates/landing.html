@@ -18,7 +18,7 @@
             background: #fff;
             padding: 30px;
             border-radius: 12px;
-            width: 320px;
+            width: 320px;5
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
 
@@ -69,10 +69,11 @@
             <!-- Django CSRF -->
             {% csrf_token %}
 
-            <input type="text" name="item_name"  placeholder="Enter Item Name" required>
             {% if not payment %}
+            <input type="text" name="item_name" value="{{ item_name }}"  placeholder="Enter Item Name" required>
             <input type="number" name="amount"  placeholder="Enter Price" required>
             {% else %}
+            <input type="text" name="item_name" value="{{ item_name }}"  placeholder="Enter Item Name" required>
             <input type="number" name="amount" value="{{ amount }}" placeholder="Enter Price" required>
             {% endif %}
 
