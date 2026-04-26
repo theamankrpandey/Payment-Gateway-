@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path ('',landing,name='landing'),
     path('pay_amount/',pay_amount,name='pay_amount'),
-    path('order_status/',order_status,name='order_status')
+    path('order_status/',order_status,name='order_status'),
+    path('add_item/',add_item,name='add_item'),
 ]

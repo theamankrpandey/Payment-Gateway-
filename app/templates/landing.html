@@ -1,106 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Payment Page</title>
+<meta charset="UTF-8">
+<title>Payment Page</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        gap: 20px;
+        position: relative;
+    }
 
-        .card {
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            width: 320px;5
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
+    /* CART LOGO TOP RIGHT */
+    .cart-icon {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        background: white;
+        padding: 10px 15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        font-size: 22px;
+        cursor: pointer;
+    }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    .cart-count {
+        background: red;
+        color: white;
+        font-size: 12px;
+        padding: 3px 7px;
+        border-radius: 50%;
+        position: absolute;
+        top: -8px;
+        right: -8px;
+    }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
+    .card {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        width: 320px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
 
-        button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-        .pay-btn {
-            background: #28a745;
-            color: white;
-        }
+    input {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
 
-        .razorpay-btn {
-            background: #0d6efd;
-            color: white;
-        }
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+    }
 
-        button:hover {
-            opacity: 0.9;
-        }
-    </style>
+    .pay-btn {
+        background: #28a745;
+        color: white;
+    }
+
+    button:hover {
+        opacity: 0.9;
+    }
+
+    .products {
+        background: white;
+        padding: 20px;
+        width: 300px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .item {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .cart-btn {
+        background: orange;
+        color: white;
+        padding: 5px 12px;
+        border: none;
+        border-radius: 5px;
+        width: auto;
+    }
+</style>
 </head>
+
 <body>
 
-    <div class="card">
-        <h2>Payment</h2>
+<!-- SIMPLE CART ICON -->
+<div class="cart-icon">
+    🛒
+    <span class="cart-count" name="cart" >0</span>
+</div>
 
-        <form method="POST" action="{% url 'pay_amount' %}">
-            <!-- Django CSRF -->
-            {% csrf_token %}
+<!-- PRODUCTS SECTION -->
+<div class="products">
+    <h2>Items</h2>
 
-            {% if not payment %}
-            <input type="text" name="item_name" value="{{ item_name }}"  placeholder="Enter Item Name" required>
-            <input type="number" name="amount"  placeholder="Enter Price" required>
-            {% else %}
-            <input type="text" name="item_name" value="{{ item_name }}"  placeholder="Enter Item Name" required>
-            <input type="number" name="amount" value="{{ amount }}" placeholder="Enter Price" required>
-            {% endif %}
+    <form action="{% url 'add_item' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="item" value="Shirt">
+        <button class="cart-btn">Shirt - ₹500 Add</button>
+    </form>
 
-            <button type="submit" class="pay-btn">Pay Now</button>
-        </form>
+    <form action="{% url 'add_item' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="item" value="Shoes">
+        <button class="cart-btn">Shoes - ₹1200 Add</button>
+    </form>
 
-        {% if  payment %}
-        <form action="{% url 'order_status' %}" method="post">
-        {% csrf_token %} 
-        <script src="https://checkout.razorpay.com/v1/checkout.js" 
-        data-key="rzp_test_pr99iascS1WRtU" 
-        data-amount="{{ payment.amount }}" 
-        data-currency="{{ payment.currency }}" 
-        data-order_id="{{ payment.id }}" 
-        data-buttontext="Pay with Razorpay" 
-        data-name="Neeraj Ecom" 
-        data-description="Thanku for visiting My Site" 
-        data-image="https://example.com/your_logo.jpg" 
-        data-prefill.name="Neeraj Kumar" 
-        data-prefill.email="Neeraj.Patel@gmail.com" 
-        data-theme.color="#2520adff" ></script> 
-        <input type="hidden" custom="Hidden Element" name="hidden"> 
-        </form>
+    <form action="{% url 'add_item' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="item" value="Watch">
+        <button class="cart-btn">Watch - ₹2500 Add</button>
+    </form>
+
+    <form action="{% url 'add_item' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="item" value="Bag">
+        <button class="cart-btn">Bag - ₹900 Add</button>
+    </form>
+
+    <form action="{% url 'add_item' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="item" value="Mobile Cover">
+        <button class="cart-btn">Mobile Cover - ₹300 Add</button>
+    </form>
+</div>
+
+
+<!-- PAYMENT SECTION -->
+<div class="card">
+    <h2>Payment</h2>
+
+    <form method="POST" action="{% url 'pay_amount' %}">
+        {% csrf_token %}
+
+        {% if not payment %}
+        <input type="text" name="item_name" value="{{ item_name }}" placeholder="Enter Item Name" required>
+        <input type="number" name="amount" placeholder="Enter Price" required>
+        {% else %}
+        <input type="text" name="item_name" value="{{ item_name }}" placeholder="Enter Item Name" required>
+        <input type="number" name="amount" value="{{ amount }}" placeholder="Enter Price" required>
         {% endif %}
-    </div>
 
-    
+        <button type="submit" class="pay-btn">Pay Now</button>
+    </form>
+
+</div>
 
 </body>
 </html>

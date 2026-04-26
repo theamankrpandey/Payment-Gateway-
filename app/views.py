@@ -24,7 +24,7 @@ def pay_amount(req):
         print(payment)
         Order.objects.create(
             Order_id = payment.get('id'),
-            Amount= int(price),
+            Amount= int(price), 
         )
     return render(req,'landing.html',{'payment':payment,'amount':price,'item_name': item_name})
 
@@ -40,3 +40,36 @@ def order_status(req):
     old_roi.Status = True
     old_roi.save()
     return render(req,'success.html')
+
+
+
+
+# views.py
+
+# def add_item(req):
+#     if req.method == "POST":
+#         item = req.POST.get('item')   # user se item lena
+
+#         cart = req.session.get('cart', [])   # old cart
+#         cart.append(item)                   # new item add
+
+#         req.session['cart'] = cart         # save in session
+
+#     return redirect('home')
+
+def add_item(req):
+    cart ={}
+    if req.method == "POST":
+        item = req.POST.get("item")
+        products = {
+            "Shirt": 500,
+            "Shoes": 1200,
+            "Watch": 2500,
+            "Bag": 900,
+            "Mobile Cover": 300
+        }
+
+        if item in products:
+            cart[item] = products[item]
+
+    return render(req, "index.html", {"cart": cart})
